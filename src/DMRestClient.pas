@@ -62,7 +62,7 @@ implementation
 { TRESTClient }
 
 const
-  cAPIKey = 'ApI-Key %s';
+  cAPIKey = 'API-Key %s';
 
 constructor TRESTClient.Create(const AAppSettings: TAppSettings);
 begin
@@ -70,7 +70,6 @@ begin
   FAppSettings := AAppSettings;
   FDM := TDataModule1.Create(nil);
   FDM.RESTClient1.BaseURL := FAppSettings.BackendBaseUrl;
-  FDM.RESTClient1.Params.AddHeader('Authorization', Format(cAPIKey, [FAppSettings.ApiKey]));
 end;
 
 destructor TRESTClient.Destroy;
@@ -96,6 +95,7 @@ begin
     req.FUrl := AUrl;
     req.FEmails := AReceiverEmail.Split([',']);
     var reqStr := TJson.ObjectToJsonString(req);
+    FDM.RRFetchURLWithSend.Params.AddHeader('Authorization', Format(cAPIKey, [FAppSettings.ApiKey])).Options := [poDoNotEncode];
     FDM.RRFetchURLWithSend.Params.AddItem(sBody, reqStr, pkREQUESTBODY, [], CONTENTTYPE_APPLICATION_JSON);
     FDM.RRFetchURLWithSend.ExecuteAsync(Finish, false, true, Error);
   finally
