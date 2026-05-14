@@ -1,0 +1,50 @@
+inherited Form1_Surface: TForm1_Surface
+  ClientHeight = 1920
+  ClientWidth = 1080
+  DesignerMasterStyle = 3
+  inherited TabControl1: TTabControl
+    Size.Width = 1080.000000000000000000
+    Size.Height = 1920.000000000000000000
+    Sizes = (
+      1048s
+      1839s
+      1048s
+      1839s)
+    inherited TabItem1: TTabItem
+      Size.Width = 32.000000000000000000
+      ExplicitSize.cx = 320.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited TFrame21: TFrame2
+        Size.Width = 1048.000000000000000000
+        Size.Height = 1839.000000000000000000
+        inherited Edit1: TEdit
+          Size.Width = 1048.000000000000000000
+          inherited Button1: TButton
+            Size.Width = 1048.000000000000000000
+          end
+          inherited Button2: TButton
+            Size.Width = 1048.000000000000000000
+          end
+        end
+      end
+    end
+    inherited TabItem2: TTabItem
+      Size.Width = 32.000000000000000000
+      ExplicitSize.cx = 320.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited TFrame11: TFrame1
+        Size.Width = 1048.000000000000000000
+        Size.Height = 1839.000000000000000000
+        inherited RootScroll: TVertScrollBox
+          Size.Width = 1038.000000000000000000
+          Size.Height = 1834.000000000000000000
+          Viewport.Width = 630.000000000000000000
+          Viewport.Height = 426.000000000000000000
+          inherited ExpAdvanced: TExpander
+            ContentSize = '200'
+          end
+        end
+      end
+    end
+  end
+end

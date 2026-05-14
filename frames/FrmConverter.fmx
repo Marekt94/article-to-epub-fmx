@@ -1,0 +1,37 @@
+object Frame2: TFrame2
+  Size.Width = 392.000000000000000000
+  Size.Height = 408.000000000000000000
+  Size.PlatformDefault = False
+  object Edit1: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Align = Center
+    Anchors = [akLeft, akRight]
+    TabOrder = 0
+    TextSettings.HorzAlign = Center
+    Size.Width = 392.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TextPrompt = 'Adres URL artyku'#322'u'
+    object Button1: TButton
+      Align = Horizontal
+      Position.Y = 52.000000000000000000
+      Size.Width = 392.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Konwertuj i wy'#347'lij do urz'#261'dzenia'
+      TextSettings.Trimming = None
+      OnClick = Button1Click
+      object Button2: TButton
+        Align = Horizontal
+        Position.Y = 40.000000000000000000
+        Size.Width = 392.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Otw'#243'rz w przegl'#261'darce'
+        TextSettings.Trimming = None
+      end
+    end
+  end
+end

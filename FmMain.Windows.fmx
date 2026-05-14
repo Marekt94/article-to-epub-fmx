@@ -1,0 +1,34 @@
+inherited Form1_Windows: TForm1_Windows
+  DesignerMasterStyle = 3
+  inherited TabControl1: TTabControl
+    Sizes = (
+      608s
+      399s
+      608s
+      399s)
+    inherited TabItem1: TTabItem
+      Size.Width = 32.000000000000000000
+      ExplicitSize.cx = 320.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+    end
+    inherited TabItem2: TTabItem
+      StyledSettings = [Family, Size, Style, FontColor, Other]
+      Padding.Left = 5.000000000000000000
+      Padding.Top = 40.000000000000000000
+      Padding.Right = 5.000000000000000000
+      Padding.Bottom = 5.000000000000000000
+      Size.Width = 32.000000000000000000
+      ExplicitSize.cx = 320.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited FfrmSettings: TFrame1
+        inherited RootScroll: TVertScrollBox
+          Viewport.Width = 598.000000000000000000
+          Viewport.Height = 394.000000000000000000
+          inherited ExpAdvanced: TExpander
+            ContentSize = '200'
+          end
+        end
+      end
+    end
+  end
+end

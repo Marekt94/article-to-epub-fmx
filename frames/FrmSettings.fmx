@@ -1,0 +1,178 @@
+object Frame1: TFrame1
+  Align = Client
+  Size.Width = 604.000000000000000000
+  Size.Height = 600.000000000000000000
+  Size.PlatformDefault = False
+  object RootScroll: TVertScrollBox
+    Align = Client
+    Size.Width = 604.000000000000000000
+    Size.Height = 600.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 604.000000000000000000
+    Viewport.Height = 600.000000000000000000
+    object CardMain: TLayout
+      Align = Top
+      Margins.Left = 16.000000000000000000
+      Margins.Top = 16.000000000000000000
+      Margins.Right = 16.000000000000000000
+      Margins.Bottom = 12.000000000000000000
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 572.000000000000000000
+      Size.Height = 126.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object LblTitle: TLabel
+        Align = Top
+        StyledSettings = [Family, FontColor]
+        Margins.Bottom = 8.000000000000000000
+        Size.Width = 572.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 22.000000000000000000
+        Text = 'Ustawienia'
+        TabOrder = 0
+      end
+      object LblReceivers: TLabel
+        Align = Top
+        Margins.Top = 8.000000000000000000
+        Position.Y = 33.000000000000000000
+        Size.Width = 572.000000000000000000
+        Size.Height = 34.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Odbiorcy (e-mail, po przecinku)'
+        TabOrder = 1
+      end
+      object EdtReceivers: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Top
+        TabOrder = 2
+        KeyboardType = EmailAddress
+        ReturnKeyType = Done
+        Position.Y = 73.000000000000000000
+        Margins.Top = 6.000000000000000000
+        Size.Width = 572.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
+        TextPrompt = 'np. czytnik@kindle.com, ja@domena.pl'
+      end
+    end
+    object ExpAdvanced: TExpander
+      Align = Top
+      IsExpanded = False
+      Margins.Left = 16.000000000000000000
+      Margins.Right = 16.000000000000000000
+      Margins.Bottom = 16.000000000000000000
+      Position.X = 16.000000000000000000
+      Position.Y = 154.000000000000000000
+      ShowCheck = False
+      Size.Width = 572.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Zaawansowane'
+      TabOrder = 1
+      ContentSize = '200'
+      object CardAdvanced: TLayout
+        Align = Top
+        Padding.Top = 8.000000000000000000
+        Size.Width = 200.000000000000000000
+        Size.Height = 420.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object LblBackend: TLabel
+          Align = Top
+          Position.Y = 8.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 34.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Adres backend (Base URL)'
+          TabOrder = 0
+        end
+        object EdtBackend: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Top
+          TabOrder = 1
+          KeyboardType = URL
+          ReturnKeyType = Next
+          Position.Y = 48.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          TextPrompt = 'https://api.twojbackend.pl'
+        end
+        object LblApiKey: TLabel
+          Align = Top
+          Margins.Top = 12.000000000000000000
+          Position.Y = 104.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 34.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'API key'
+          TabOrder = 2
+        end
+        object EdtApiKey: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Top
+          TabOrder = 3
+          ReturnKeyType = Next
+          Password = True
+          Position.Y = 144.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          TextPrompt = 'Wklej klucz API'
+        end
+        object LblSenderEmail: TLabel
+          Align = Top
+          Margins.Top = 12.000000000000000000
+          Position.Y = 200.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 34.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'E-mail nadawcy'
+          TabOrder = 4
+        end
+        object EdtSenderEmail: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Top
+          TabOrder = 5
+          KeyboardType = EmailAddress
+          ReturnKeyType = Next
+          Position.Y = 240.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          TextPrompt = 'np. wysylka@domena.pl'
+        end
+        object LblSenderPassword: TLabel
+          Align = Top
+          AutoSize = True
+          Margins.Top = 12.000000000000000000
+          Position.Y = 296.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Haslo aplikacji (dla e-maila nadawcy)'
+          TabOrder = 6
+        end
+        object EdtSenderPassword: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Top
+          TabOrder = 7
+          ReturnKeyType = Done
+          Password = True
+          Position.Y = 318.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Size.Width = 200.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          TextPrompt = 'Wklej haslo aplikacji'
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,87 @@
+﻿inherited Form1_XLgXhdpiTb: TForm1_XLgXhdpiTb
+  ClientHeight = 1255
+  ClientWidth = 800
+  DesignerMasterStyle = 3
+  inherited TabControl1: TTabControl
+    Size.Width = 800.000000000000000000
+    Size.Height = 1255.000000000000000000
+    Sizes = (
+      800s
+      1206s
+      800s
+      1206s)
+    inherited TabItem1: TTabItem
+      Size.Width = 4.000000000000000000
+      ExplicitSize.cx = 320.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+    end
+    inherited TabItem2: TTabItem
+      Size.Width = 4.000000000000000000
+      ExplicitSize.cx = 320.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited TFrame11: TFrame1
+        Size.Width = 800.000000000000000000
+        Size.Height = 1206.000000000000000000
+        inherited GridPanelLayout1: TGridPanelLayout
+          Size.Width = 800.000000000000000000
+          ControlCollection = <
+            item
+              Column = 0
+              Control = TFrame11.Label1
+              Row = 0
+            end
+            item
+              Column = 1
+              Control = TFrame11.Edit1
+              Row = 0
+            end>
+          inherited Label1: TLabel
+            Size.Width = 400.000000000000000000
+          end
+          inherited Edit1: TEdit
+            Position.X = 400.000000000000000000
+          end
+        end
+        inherited Layout1: TLayout
+          Size.Width = 800.000000000000000000
+        end
+        inherited GridPanelLayout2: TGridPanelLayout
+          Size.Width = 800.000000000000000000
+          ControlCollection = <
+            item
+              Column = 0
+              Control = TFrame11.Label2
+              Row = 0
+            end
+            item
+              Column = 1
+              Control = TFrame11.Edit2
+              Row = 0
+            end
+            item
+              Column = 0
+              Control = TFrame11.Label3
+              Row = 1
+            end
+            item
+              Column = 1
+              Control = TFrame11.Edit3
+              Row = 1
+            end>
+          inherited Label2: TLabel
+            Size.Width = 400.000000000000000000
+          end
+          inherited Edit2: TEdit
+            Position.X = 400.000000000000000000
+          end
+          inherited Label3: TLabel
+            Size.Width = 400.000000000000000000
+          end
+          inherited Edit3: TEdit
+            Position.X = 400.000000000000000000
+          end
+        end
+      end
+    end
+  end
+end
