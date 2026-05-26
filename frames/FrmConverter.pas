@@ -3,7 +3,7 @@ unit FrmConverter;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Edit, ClientInterface, Settings, ClientFactory,
   SettingsInterface;
@@ -18,13 +18,14 @@ type
     FClient: IClient;
     FOnStart: TProc;
     FOnFinish: TProc;
+    FOnError: TProc<TObject>;
     FSettingsRepo: ISettingsRepository;
   public
     procedure Init(const ARepo: ISettingsRepository);
     procedure SetOnStart(const AProc: TProc);
-    procedure SetOnFinish(const AProc: TProc);
+    procedure SetOnSuccess(const AProc: TProc);
+    procedure SetOnError(const AError: TProc<TObject>);
     property OnStart: TProc write SetOnStart;
-    property OnFinish: TProc write SetOnFinish;
   end;
 
 implementation
@@ -39,7 +40,8 @@ begin
   if Supports(FClient, IExecutingHandlers, temp) then
   begin
     temp.OnStart := FOnStart;
-    temp.OnFinish := FOnFinish;
+    temp.OnSuccess := FOnFinish;
+    temp.OnError := FOnError;
   end;
   FClient.FetchURL(Edit1.Text.Trim, AppSettings.ReceiverEmailsCsv);
 end;
@@ -49,7 +51,12 @@ begin
   FSettingsRepo := ARepo;
 end;
 
-procedure TFrame2.SetOnFinish(const AProc: TProc);
+procedure TFrame2.SetOnError(const AError: TProc<TObject>);
+begin
+  FOnError := AError;
+end;
+
+procedure TFrame2.SetOnSuccess(const AProc: TProc);
 begin
   FOnFinish := AProc;
 end;

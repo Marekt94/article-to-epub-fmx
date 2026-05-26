@@ -27,7 +27,9 @@ type
     FDM: TDataModule1;
     FAppSettings: TAppSettings;
     FOnStart: TProc;
-    FOnFinish: TProc;
+    FOnSuccess: TProc;
+    FOnError: TProc<TObject>;
+    procedure AddCommonHeaders(Areq: TCustomRESTRequest);
   public
     constructor Create(const AAppSettings: TAppSettings);
     destructor Destroy; override;
@@ -40,9 +42,9 @@ type
     procedure Error(AObj: TObject);
 
     procedure SetOnStart(const AProc: TProc);
-    procedure SetOnFinish(const AProc: TProc);
+    procedure SetOnSuccess(const AProc: TProc);
+    procedure SetOnError(const AError: TProc<TObject>);
     property OnStart: TProc write SetOnStart;
-    property OnFinish: TProc write SetOnFinish;
   end;
 
   TBody = class
@@ -64,12 +66,20 @@ implementation
 const
   cAPIKey = 'API-Key %s';
 
+procedure TRESTClient.AddCommonHeaders(Areq: TCustomRESTRequest);
+begin
+  Areq.Params.AddHeader('Authorization', Format(cAPIKey, [FAppSettings.ApiKey])).Options := [poDoNotEncode];
+end;
+
 constructor TRESTClient.Create(const AAppSettings: TAppSettings);
 begin
   inherited Create;
   FAppSettings := AAppSettings;
   FDM := TDataModule1.Create(nil);
   FDM.RESTClient1.BaseURL := FAppSettings.BackendBaseUrl;
+
+  FDM.RRFetchURLWithEpubInResp.OnBeforeExecute := AddCommonHeaders;
+  FDM.RRFetchURLWithSend.OnBeforeExecute := AddCommonHeaders;
 end;
 
 destructor TRESTClient.Destroy;
@@ -82,8 +92,8 @@ procedure TRESTClient.Error(AObj: TObject);
 begin
   TThread.Synchronize(nil, procedure
     begin
-      if Assigned(FOnFinish) then
-        FOnFinish;
+      if Assigned(FOnError) then
+        FOnError(AObj);
     end);
 end;
 
@@ -95,7 +105,6 @@ begin
     req.FUrl := AUrl;
     req.FEmails := AReceiverEmail.Split([',']);
     var reqStr := TJson.ObjectToJsonString(req);
-    FDM.RRFetchURLWithSend.Params.AddHeader('Authorization', Format(cAPIKey, [FAppSettings.ApiKey])).Options := [poDoNotEncode];
     FDM.RRFetchURLWithSend.Params.AddItem(sBody, reqStr, pkREQUESTBODY, [], CONTENTTYPE_APPLICATION_JSON);
     FDM.RRFetchURLWithSend.ExecuteAsync(Finish, false, true, Error);
   finally
@@ -107,8 +116,8 @@ procedure TRESTClient.Finish;
 begin
   TThread.Synchronize(nil, procedure
     begin
-      if Assigned(FOnFinish) then
-        FOnFinish;
+      if Assigned(FOnSuccess) then
+        FOnSuccess;
     end);
 end;
 
@@ -138,9 +147,14 @@ begin
   FDM.RRHealth.ExecuteAsync(LFinish, false, true, LError);
 end;
 
-procedure TRESTClient.SetOnFinish(const AProc: TProc);
+procedure TRESTClient.SetOnError(const AError: TProc<TObject>);
 begin
-  FOnFinish := AProc;
+  FOnError := AError;
+end;
+
+procedure TRESTClient.SetOnSuccess(const AProc: TProc);
+begin
+  FOnSuccess := AProc;
 end;
 
 procedure TRESTClient.SetOnStart(const AProc: TProc);
