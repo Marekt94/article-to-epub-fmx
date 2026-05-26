@@ -6,10 +6,10 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Edit, FMX.Layouts, FMX.Objects, SettingsInterface,
-  Settings;
+  Settings, ClientInterface, ClientFactory;
 
 type
-  TFrame1 = class(TFrame)
+  TFrame1 = class(TFrame, IExecutingHandlers)
   RootScroll: TVertScrollBox;
   CardMain: TLayout;
   LblTitle: TLabel;
@@ -25,16 +25,25 @@ type
   EdtSenderEmail: TEdit;
   LblSenderPassword: TLabel;
   EdtSenderPassword: TEdit;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
   private
-    { Private declarations }
-  FRepo: ISettingsRepository;
-  function ReadSettingsFromUi: TAppSettings;
-  procedure ReadSettingsToUi(const AppSettings: TAppSettings);
+    FClient: IClient;
+    FOnStart: TProc;
+    FOnFinish: TProc;
+    FOnError: TProc<TObject>;
+    FRepo: ISettingsRepository;
+    function ReadSettingsFromUi: TAppSettings;
+    procedure ReadSettingsToUi(const AppSettings: TAppSettings);
   public
-    { Public declarations }
-  procedure Init(const ARepo: ISettingsRepository);
-  procedure LoadFromRepo;
-  procedure SaveToRepo;
+      { Public declarations }
+    procedure Init(const ARepo: ISettingsRepository);
+    procedure LoadFromRepo;
+    procedure SaveToRepo;
+
+    procedure SetOnStart(const AProc: TProc);
+    procedure SetOnSuccess(const AProc: TProc);
+    procedure SetOnError(const AError: TProc<TObject>);
   end;
 
 implementation
@@ -42,6 +51,20 @@ implementation
 {$R *.fmx}
 
 { TAppSettings }
+
+procedure TFrame1.Button1Click(Sender: TObject);
+begin
+  var AppSettings := FRepo.Load;
+  FClient := TClientFactory.CreateInstance(AppSettings);
+  var temp: IExecutingHandlers;
+  if Supports(FClient, IExecutingHandlers, temp) then
+  begin
+    temp.OnStart := FOnStart;
+    temp.OnSuccess := FOnFinish;
+    temp.OnError := FOnError;
+  end;
+  FClient.Health
+end;
 
 procedure TFrame1.Init(const ARepo: ISettingsRepository);
 begin
@@ -83,6 +106,21 @@ begin
   if FRepo = nil then
     Exit;
   FRepo.Save(ReadSettingsFromUi);
+end;
+
+procedure TFrame1.SetOnError(const AError: TProc<TObject>);
+begin
+  FOnError := AError;
+end;
+
+procedure TFrame1.SetOnStart(const AProc: TProc);
+begin
+  FOnStart := AProc;
+end;
+
+procedure TFrame1.SetOnSuccess(const AProc: TProc);
+begin
+  FOnFinish := AProc
 end;
 
 end.

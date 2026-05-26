@@ -35,7 +35,7 @@ type
     destructor Destroy; override;
 
     procedure FetchURL(const AURL: string; const AReceiverEmail: string);
-    procedure Health(const AOnDone: TProc<boolean>);
+    procedure Health;
 
     procedure Start;
     procedure Finish;
@@ -121,30 +121,10 @@ begin
     end);
 end;
 
-procedure TRESTClient.Health(const AOnDone: TProc<boolean>);
-var
-  LFinish: TProc;
-  LError: TProc<TObject>;
+procedure TRESTClient.Health;
 begin
   Start;
-  LFinish := procedure
-    begin
-      TThread.Synchronize(nil, procedure
-        begin
-          Finish;
-          AOnDone(true);
-        end)
-    end;
-
-  LError := procedure(AObj: TObject)
-    begin
-      TThread.Synchronize(nil, procedure
-      begin
-        Error(Aobj);
-        AOnDone(false);
-      end);
-    end;
-  FDM.RRHealth.ExecuteAsync(LFinish, false, true, LError);
+  FDM.RRHealth.ExecuteAsync(Finish, false, true, Error);
 end;
 
 procedure TRESTClient.SetOnError(const AError: TProc<TObject>);

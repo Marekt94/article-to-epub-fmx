@@ -1,16 +1,16 @@
 object Frame1: TFrame1
   Align = Client
   Size.Width = 604.000000000000000000
-  Size.Height = 600.000000000000000000
+  Size.Height = 596.000000000000000000
   Size.PlatformDefault = False
   object RootScroll: TVertScrollBox
     Align = Client
     Size.Width = 604.000000000000000000
-    Size.Height = 600.000000000000000000
+    Size.Height = 596.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     Viewport.Width = 604.000000000000000000
-    Viewport.Height = 600.000000000000000000
+    Viewport.Height = 596.000000000000000000
     object CardMain: TLayout
       Align = Top
       Margins.Left = 16.000000000000000000
@@ -68,22 +68,22 @@ object Frame1: TFrame1
       Position.Y = 154.000000000000000000
       ShowCheck = False
       Size.Width = 572.000000000000000000
-      Size.Height = 25.000000000000000000
+      Size.Height = 431.000000000000000000
       Size.PlatformDefault = False
       Text = 'Zaawansowane'
       TabOrder = 1
-      ContentSize = '200'
+      ContentSize = '406'
       object CardAdvanced: TLayout
         Align = Top
         Padding.Top = 8.000000000000000000
-        Size.Width = 200.000000000000000000
-        Size.Height = 420.000000000000000000
+        Size.Width = 572.000000000000000000
+        Size.Height = 401.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object LblBackend: TLabel
           Align = Top
           Position.Y = 8.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 34.000000000000000000
           Size.PlatformDefault = False
           Text = 'Adres backend (Base URL)'
@@ -97,7 +97,7 @@ object Frame1: TFrame1
           ReturnKeyType = Next
           Position.Y = 48.000000000000000000
           Margins.Top = 6.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
           TextPrompt = 'https://api.twojbackend.pl'
@@ -106,7 +106,7 @@ object Frame1: TFrame1
           Align = Top
           Margins.Top = 12.000000000000000000
           Position.Y = 104.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 34.000000000000000000
           Size.PlatformDefault = False
           Text = 'API key'
@@ -120,7 +120,7 @@ object Frame1: TFrame1
           Password = True
           Position.Y = 144.000000000000000000
           Margins.Top = 6.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
           TextPrompt = 'Wklej klucz API'
@@ -129,7 +129,7 @@ object Frame1: TFrame1
           Align = Top
           Margins.Top = 12.000000000000000000
           Position.Y = 200.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 34.000000000000000000
           Size.PlatformDefault = False
           Text = 'E-mail nadawcy'
@@ -143,7 +143,7 @@ object Frame1: TFrame1
           ReturnKeyType = Next
           Position.Y = 240.000000000000000000
           Margins.Top = 6.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
           TextPrompt = 'np. wysylka@domena.pl'
@@ -153,7 +153,7 @@ object Frame1: TFrame1
           AutoSize = True
           Margins.Top = 12.000000000000000000
           Position.Y = 296.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 16.000000000000000000
           Size.PlatformDefault = False
           Text = 'Haslo aplikacji (dla e-maila nadawcy)'
@@ -167,10 +167,22 @@ object Frame1: TFrame1
           Password = True
           Position.Y = 318.000000000000000000
           Margins.Top = 6.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 572.000000000000000000
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
           TextPrompt = 'Wklej haslo aplikacji'
+        end
+        object Button1: TButton
+          Align = Top
+          Margins.Top = 12.000000000000000000
+          Position.Y = 374.000000000000000000
+          Size.Width = 572.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 8
+          Text = 'Sprawd'#378' po'#322#261'czenie'
+          TextSettings.Trimming = None
+          OnClick = Button1Click
         end
       end
     end
