@@ -55,7 +55,6 @@ object Form1: TForm1
             Size.Width = 608.000000000000000000
             inherited Button2: TButton
               Size.Width = 608.000000000000000000
-              TabOrder = 5
             end
           end
         end
@@ -103,32 +102,35 @@ object Form1: TForm1
           end
           inherited ExpAdvanced: TExpander
             Size.Width = 566.000000000000000000
-            ContentSize = '200'
+            ContentSize = '406'
             inherited CardAdvanced: TLayout
-              Size.PlatformDefault = True
+              Size.Width = 566.000000000000000000
               inherited LblBackend: TLabel
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited EdtBackend: TEdit
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited LblApiKey: TLabel
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited EdtApiKey: TEdit
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited LblSenderEmail: TLabel
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited EdtSenderEmail: TEdit
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited LblSenderPassword: TLabel
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
               end
               inherited EdtSenderPassword: TEdit
-                Size.Width = 50.000000000000000000
+                Size.Width = 566.000000000000000000
+              end
+              inherited Button1: TButton
+                Size.Width = 566.000000000000000000
               end
             end
           end

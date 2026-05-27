@@ -53,7 +53,7 @@ begin
     if Supports(comp, IExecutingHandlers, temp) then
     begin
       temp.OnStart := OnStart;
-      temp.OnSuccess := OnFinish;
+      temp.OnSuccess := OnSuccess;
       temp.OnError := OnError;
     end;
   end;

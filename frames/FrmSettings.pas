@@ -26,7 +26,7 @@ type
   LblSenderPassword: TLabel;
   EdtSenderPassword: TEdit;
     Button1: TButton;
-    procedure Button1Click(Sender: TObject);
+  procedure Button1Click(Sender: TObject);
   private
     FClient: IClient;
     FOnStart: TProc;
@@ -54,6 +54,7 @@ implementation
 
 procedure TFrame1.Button1Click(Sender: TObject);
 begin
+  SaveToRepo;
   var AppSettings := FRepo.Load;
   FClient := TClientFactory.CreateInstance(AppSettings);
   var temp: IExecutingHandlers;

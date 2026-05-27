@@ -60,7 +60,6 @@ object Frame1: TFrame1
     end
     object ExpAdvanced: TExpander
       Align = Top
-      IsExpanded = False
       Margins.Left = 16.000000000000000000
       Margins.Right = 16.000000000000000000
       Margins.Bottom = 16.000000000000000000
@@ -74,10 +73,10 @@ object Frame1: TFrame1
       TabOrder = 1
       ContentSize = '406'
       object CardAdvanced: TLayout
-        Align = Top
+        Align = Client
         Padding.Top = 8.000000000000000000
         Size.Width = 572.000000000000000000
-        Size.Height = 401.000000000000000000
+        Size.Height = 406.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object LblBackend: TLabel
@@ -180,7 +179,7 @@ object Frame1: TFrame1
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 8
-          Text = 'Sprawd'#378' po'#322#261'czenie'
+          Text = 'Testuj po'#322#261'czenie z serwerem'
           TextSettings.Trimming = None
           OnClick = Button1Click
         end
