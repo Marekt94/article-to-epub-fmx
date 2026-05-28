@@ -43,6 +43,8 @@ type
     procedure FinishFetchURL;
     procedure FinishHealth;
 
+    function IsSuccess(const AResp: TRESTResponse; out AInfo: string): boolean;
+
     procedure SetOnStart(const AProc: TProc);
     procedure SetOnSuccess(const AProc: TProc<string>);
     procedure SetOnError(const AError: TProc<TObject>);
@@ -117,8 +119,14 @@ procedure TRESTClient.FinishHealth;
 begin
   TThread.Synchronize(nil, procedure
     begin
-      if Assigned(FOnSuccess) then
-        FOnSuccess('Po³¹czono z serwerem');
+      var info: string;
+      if IsSuccess(FDM.HelthResp, info) then
+      begin
+        if Assigned(FOnSuccess) then
+          FOnSuccess('Po³¹czono z serwerem')
+      end
+      else if Assigned(FOnError) then
+        FOnError(Exception.Create(info));
     end);
 end;
 
@@ -126,8 +134,14 @@ procedure TRESTClient.FinishFetchURL;
 begin
   TThread.Synchronize(nil, procedure
     begin
-      if Assigned(FOnSuccess) then
-        FOnSuccess('Artyku³ skonwertowany i wys³any poprawnie');
+      var info: string;
+      if IsSuccess(FDM.FetchURLWithSendResp, info) then
+      begin
+        if Assigned(FOnSuccess) then
+          FOnSuccess('Artyku³ skonwertowany i wys³any poprawnie')
+      end
+      else if Assigned(FOnError) then
+        FOnError(Exception.Create(info))
     end);
 end;
 
@@ -135,6 +149,25 @@ procedure TRESTClient.Health;
 begin
   Start;
   FDM.RRHealth.ExecuteAsync(FinishHealth, false, true, Error);
+end;
+
+function TRESTClient.IsSuccess(const AResp: TRESTResponse;
+  out AInfo: string): boolean;
+const
+  cGenericError = '%d: %s';
+var
+  jsonText: string;
+begin
+  case AResp.StatusCode of
+    200..299:
+    begin
+      Result := true;
+      AInfo := '';
+    end;
+  else
+    Result := False;
+    AInfo := Format(cGenericError, [AResp.StatusCode, AResp.StatusText]);
+  end;
 end;
 
 procedure TRESTClient.SetOnError(const AError: TProc<TObject>);
