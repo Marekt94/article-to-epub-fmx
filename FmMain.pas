@@ -8,7 +8,7 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.DialogService, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Objects, System.ImageList, FMX.ImgList,
   FMX.TabControl, SettingsRepository, FMX.Ani, FMX.Gestures, SettingsInterface, FrmConverter,
-  FrmSettings, ClientInterface;
+  FrmSettings, ClientInterface, FMX.Platform;
 
 type
   TForm1 = class(TForm)
@@ -24,20 +24,36 @@ type
   private
     { Private declarations }
     FSettingsRepo: ISettingsRepository;
+    {$IF DEFINED(ANDROID)}
+    function AppEventHanlder(AAppEvent: TApplicationEvent; AContext: TObject): boolean;
+    {$ENDIF}
   public
     procedure Init;
     procedure OnStart;
     procedure OnFinish;
     procedure OnError(AObj: TObject);
-    procedure OnSuccess;
+    procedure OnSuccess(AText: string);
   end;
 
 implementation
+
+uses
+  FMX.Dialogs;
 
 {$R *.fmx}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.LgXhdpiPh.fmx ANDROID}
 {$R *.Surface.fmx MSWINDOWS}
+
+{$IF DEFINED(ANDROID)}
+function TForm1.AppEventHanlder(AAppEvent: TApplicationEvent;
+  AContext: TObject): boolean;
+begin
+  if AAppEvent = TApplicationEvent.BecameActive then
+    FfrmConverter.OnShareIntent;
+  result := true;
+end;
+{$ENDIF}
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -47,6 +63,7 @@ end;
 procedure TForm1.Init;
 var
   temp: IExecutingHandlers;
+  appEventSvc: IFMXApplicationEventService;
 begin
   for var comp in [FfrmSettings, FfrmConverter] do
   begin
@@ -61,6 +78,11 @@ begin
   FSettingsRepo := TIniFileSettingsRepository.Create;
   FfrmSettings.Init(FSettingsRepo);
   FfrmConverter.Init(FSettingsRepo);
+
+{$IF DEFINED(ANDROID)}
+  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(AppEventSvc)) then
+    appEventSvc.SetApplicationEventHandler(AppEventHanlder);
+{$ENDIF}
 end;
 
 procedure TForm1.OnError(AObj: TObject);
@@ -92,10 +114,16 @@ begin
   TabControl1.Opacity := 0.3;
 end;
 
-procedure TForm1.OnSuccess;
+procedure TForm1.OnSuccess(AText: string);
+var
+ LText: string;
 begin
   OnFinish;
-  TDialogService.MessageDialog('Task finished successfully', TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil)
+  if AText.Trim = '' then
+    LText := 'Task finished successfully'
+  else
+    LText := AText;
+  TDialogService.MessageDialog(LText, TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil)
 end;
 
 procedure TForm1.TabControl1Change(Sender: TObject);

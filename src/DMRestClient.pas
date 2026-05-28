@@ -27,7 +27,7 @@ type
     FDM: TDataModule1;
     FAppSettings: TAppSettings;
     FOnStart: TProc;
-    FOnSuccess: TProc;
+    FOnSuccess: TProc<string>;
     FOnError: TProc<TObject>;
     procedure AddCommonHeaders(Areq: TCustomRESTRequest);
   public
@@ -38,13 +38,14 @@ type
     procedure Health;
 
     procedure Start;
-    procedure Finish;
     procedure Error(AObj: TObject);
 
+    procedure FinishFetchURL;
+    procedure FinishHealth;
+
     procedure SetOnStart(const AProc: TProc);
-    procedure SetOnSuccess(const AProc: TProc);
+    procedure SetOnSuccess(const AProc: TProc<string>);
     procedure SetOnError(const AError: TProc<TObject>);
-    property OnStart: TProc write SetOnStart;
   end;
 
   TBody = class
@@ -106,25 +107,34 @@ begin
     req.FEmails := AReceiverEmail.Split([',']);
     var reqStr := TJson.ObjectToJsonString(req);
     FDM.RRFetchURLWithSend.Params.AddItem(sBody, reqStr, pkREQUESTBODY, [], CONTENTTYPE_APPLICATION_JSON);
-    FDM.RRFetchURLWithSend.ExecuteAsync(Finish, false, true, Error);
+    FDM.RRFetchURLWithSend.ExecuteAsync(FinishFetchURL, false, true, Error);
   finally
     req.Free;
   end;
 end;
 
-procedure TRESTClient.Finish;
+procedure TRESTClient.FinishHealth;
 begin
   TThread.Synchronize(nil, procedure
     begin
       if Assigned(FOnSuccess) then
-        FOnSuccess;
+        FOnSuccess('Po³¹czono z serwerem');
+    end);
+end;
+
+procedure TRESTClient.FinishFetchURL;
+begin
+  TThread.Synchronize(nil, procedure
+    begin
+      if Assigned(FOnSuccess) then
+        FOnSuccess('Artyku³ skonwertowany i wys³any poprawnie');
     end);
 end;
 
 procedure TRESTClient.Health;
 begin
   Start;
-  FDM.RRHealth.ExecuteAsync(Finish, false, true, Error);
+  FDM.RRHealth.ExecuteAsync(FinishHealth, false, true, Error);
 end;
 
 procedure TRESTClient.SetOnError(const AError: TProc<TObject>);
@@ -132,7 +142,7 @@ begin
   FOnError := AError;
 end;
 
-procedure TRESTClient.SetOnSuccess(const AProc: TProc);
+procedure TRESTClient.SetOnSuccess(const AProc: TProc<string>);
 begin
   FOnSuccess := AProc;
 end;

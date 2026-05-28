@@ -17,18 +17,30 @@ type
   private
     FClient: IClient;
     FOnStart: TProc;
-    FOnFinish: TProc;
+    FOnFinish: TProc<string>;
     FOnError: TProc<TObject>;
     FSettingsRepo: ISettingsRepository;
+    FIntentDetails: string;
   public
     procedure Init(const ARepo: ISettingsRepository);
+    {$IF DEFINED(ANDROID)}
+    procedure OnShareIntent;
+    {$ENDIF}
     procedure SetOnStart(const AProc: TProc);
-    procedure SetOnSuccess(const AProc: TProc);
+    procedure SetOnSuccess(const AProc: TProc<string>);
     procedure SetOnError(const AError: TProc<TObject>);
     property OnStart: TProc write SetOnStart;
   end;
 
 implementation
+
+{$IF DEFINED(ANDROID)}
+uses
+  Androidapi.JNI.App
+  , Androidapi.JNI.JavaTypes
+  , Androidapi.Helpers
+  , Androidapi.JNI.GraphicsContentViewText;
+{$ENDIF}
 
 {$R *.fmx}
 
@@ -51,12 +63,36 @@ begin
   FSettingsRepo := ARepo;
 end;
 
+{$IF DEFINED(ANDROID)}
+procedure TFrame2.OnShareIntent;
+var
+  LIntent: JIntent;
+  LAction, LMimeType, LText: string;
+begin
+  LIntent := TAndroidHelper.Activity.getIntent();
+  if not Assigned(LIntent) then
+    exit;
+
+  LAction := JStringToString(LIntent.getAction);
+  LText := JStringToString(LIntent.getStringExtra(TJIntent.JavaClass.EXTRA_TEXT));
+
+  if LText = FIntentDetails then
+    exit;
+
+  if LAction = JStringToString(TJIntent.JavaClass.ACTION_SEND) then
+  begin
+    FIntentDetails := LText;
+    Edit1.Text := LText;
+  end;
+end;
+{$ENDIF}
+
 procedure TFrame2.SetOnError(const AError: TProc<TObject>);
 begin
   FOnError := AError;
 end;
 
-procedure TFrame2.SetOnSuccess(const AProc: TProc);
+procedure TFrame2.SetOnSuccess(const AProc: TProc<string>);
 begin
   FOnFinish := AProc;
 end;

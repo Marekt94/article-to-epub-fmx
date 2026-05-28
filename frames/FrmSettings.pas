@@ -30,7 +30,7 @@ type
   private
     FClient: IClient;
     FOnStart: TProc;
-    FOnFinish: TProc;
+    FOnFinish: TProc<string>;
     FOnError: TProc<TObject>;
     FRepo: ISettingsRepository;
     function ReadSettingsFromUi: TAppSettings;
@@ -42,7 +42,7 @@ type
     procedure SaveToRepo;
 
     procedure SetOnStart(const AProc: TProc);
-    procedure SetOnSuccess(const AProc: TProc);
+    procedure SetOnSuccess(const AProc: TProc<string>);
     procedure SetOnError(const AError: TProc<TObject>);
   end;
 
@@ -119,7 +119,7 @@ begin
   FOnStart := AProc;
 end;
 
-procedure TFrame1.SetOnSuccess(const AProc: TProc);
+procedure TFrame1.SetOnSuccess(const AProc: TProc<string>);
 begin
   FOnFinish := AProc
 end;
