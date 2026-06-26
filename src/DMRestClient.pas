@@ -47,6 +47,7 @@ type
     procedure FinishHealth;
 
     procedure ErrorFetchUrl(AObj: TObject);
+    procedure ErrorHealth(AObj: TObject);
 
     function IsSuccess(const AResp: TRESTResponse; out AInfo: string): boolean;
 
@@ -134,6 +135,19 @@ begin
     end);
 end;
 
+procedure TRESTClient.ErrorHealth(AObj: TObject);
+begin
+  TThread.Synchronize(nil, procedure
+    begin
+      var err := Exception(AObj);
+      if Assigned(FOnError) then
+      begin
+        var resErrorText := Error(FDm.HelthResp, err.Message);
+        FOnError(Exception.Create(resErrorText))
+      end;
+    end);
+end;
+
 procedure TRESTClient.FetchURL(const AURL, AReceiverEmail: string);
 begin
   Start;
@@ -182,7 +196,7 @@ end;
 procedure TRESTClient.Health;
 begin
   Start;
-  FDM.RRHealth.ExecuteAsync(FinishHealth, false, true, Error);
+  FDM.RRHealth.ExecuteAsync(FinishHealth, false, true, ErrorHealth);
 end;
 
 function TRESTClient.IsSuccess(const AResp: TRESTResponse;
