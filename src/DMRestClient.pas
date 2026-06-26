@@ -22,6 +22,8 @@ type
     { Public declarations }
   end;
 
+  TError = class;
+
   TRESTClient = class(TInterfacedObject, IClient, IExecutingHandlers)
   strict private
     FDM: TDataModule1;
@@ -30,6 +32,7 @@ type
     FOnSuccess: TProc<string>;
     FOnError: TProc<TObject>;
     procedure AddCommonHeaders(Areq: TCustomRESTRequest);
+    function Error(const AResp: TRESTResponse; const ADefaultErrorText: string): string; overload;
   public
     constructor Create(const AAppSettings: TAppSettings);
     destructor Destroy; override;
@@ -38,10 +41,12 @@ type
     procedure Health;
 
     procedure Start;
-    procedure Error(AObj: TObject);
+    procedure Error(AObj: TObject); overload;
 
     procedure FinishFetchURL;
     procedure FinishHealth;
+
+    procedure ErrorFetchUrl(AObj: TObject);
 
     function IsSuccess(const AResp: TRESTResponse; out AInfo: string): boolean;
 
@@ -58,6 +63,12 @@ type
     FEmails: TArray<string>;
   end;
 
+  TError = class
+    private
+    [JSONName('error')]
+    FError: string;
+  end;
+
 implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
@@ -67,6 +78,7 @@ implementation
 { TRESTClient }
 
 const
+  cGenericError = '%d: %s';
   cAPIKey = 'API-Key %s';
 
 procedure TRESTClient.AddCommonHeaders(Areq: TCustomRESTRequest);
@@ -100,6 +112,28 @@ begin
     end);
 end;
 
+function TRESTClient.Error(const AResp: TRESTResponse; const ADefaultErrorText: string): string;
+begin
+  var error := TJson.JsonToObject<TError>(AResp.Content);
+  if Assigned(error) then
+    result := Format(cGenericError, [AResp.StatusCode, error.FError])
+  else
+    Result := ADefaultErrorText
+end;
+
+procedure TRESTClient.ErrorFetchUrl(AObj: TObject);
+begin
+  TThread.Synchronize(nil, procedure
+    begin
+      var err := Exception(AObj);
+      if Assigned(FOnError) then
+      begin
+        var resErrorText := Error(FDm.FetchURLWithSendResp, err.Message);
+        FOnError(Exception.Create(resErrorText))
+      end;
+    end);
+end;
+
 procedure TRESTClient.FetchURL(const AURL, AReceiverEmail: string);
 begin
   Start;
@@ -109,7 +143,7 @@ begin
     req.FEmails := AReceiverEmail.Split([',']);
     var reqStr := TJson.ObjectToJsonString(req);
     FDM.RRFetchURLWithSend.Params.AddItem(sBody, reqStr, pkREQUESTBODY, [], CONTENTTYPE_APPLICATION_JSON);
-    FDM.RRFetchURLWithSend.ExecuteAsync(FinishFetchURL, false, true, Error);
+    FDM.RRFetchURLWithSend.ExecuteAsync(FinishFetchURL, false, true, ErrorFetchUrl);
   finally
     req.Free;
   end;
@@ -153,8 +187,6 @@ end;
 
 function TRESTClient.IsSuccess(const AResp: TRESTResponse;
   out AInfo: string): boolean;
-const
-  cGenericError = '%d: %s';
 var
   jsonText: string;
 begin
