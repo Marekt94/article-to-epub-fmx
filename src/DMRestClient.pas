@@ -201,8 +201,6 @@ end;
 
 function TRESTClient.IsSuccess(const AResp: TRESTResponse;
   out AInfo: string): boolean;
-var
-  jsonText: string;
 begin
   case AResp.StatusCode of
     200..299:
