@@ -67,7 +67,7 @@ end;
 procedure TFrame2.OnShareIntent;
 var
   LIntent: JIntent;
-  LAction, LMimeType, LText: string;
+  LAction, LText: string;
 begin
   LIntent := TAndroidHelper.Activity.getIntent();
   if not Assigned(LIntent) then
