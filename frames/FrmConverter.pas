@@ -5,15 +5,17 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Controls.Presentation, FMX.Edit, ClientInterface, Settings, ClientFactory,
-  SettingsInterface;
+  FMX.Controls.Presentation, FMX.Edit, FMX.Layouts, ClientInterface, Settings,
+  ClientFactory, SettingsInterface;
 
 type
   TFrame2 = class(TFrame, IExecutingHandlers)
+    LayoutMain: TLayout;
     Edit1: TEdit;
     Button1: TButton;
     Button2: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     FClient: IClient;
     FOnStart: TProc;
@@ -21,6 +23,7 @@ type
     FOnError: TProc<TObject>;
     FSettingsRepo: ISettingsRepository;
     FIntentDetails: string;
+    FOnOpenBrowser: TProc<string>;
   public
     procedure Init(const ARepo: ISettingsRepository);
     {$IF DEFINED(ANDROID)}
@@ -30,17 +33,20 @@ type
     procedure SetOnSuccess(const AProc: TProc<string>);
     procedure SetOnError(const AError: TProc<TObject>);
     property OnStart: TProc write SetOnStart;
+    property OnOpenBrowser: TProc<string> write FOnOpenBrowser;
   end;
 
 implementation
 
-{$IF DEFINED(ANDROID)}
 uses
-  Androidapi.JNI.App
+  FMX.DialogService
+  {$IF DEFINED(ANDROID)}
+  , Androidapi.JNI.App
   , Androidapi.JNI.JavaTypes
   , Androidapi.Helpers
-  , Androidapi.JNI.GraphicsContentViewText;
-{$ENDIF}
+  , Androidapi.JNI.GraphicsContentViewText
+  {$ENDIF}
+  ;
 
 {$R *.fmx}
 
@@ -56,6 +62,18 @@ begin
     temp.OnError := FOnError;
   end;
   FClient.FetchURL(Edit1.Text.Trim, AppSettings.ReceiverEmailsCsv);
+end;
+
+procedure TFrame2.Button2Click(Sender: TObject);
+begin
+  if Edit1.Text.Trim = '' then
+  begin
+    TDialogService.MessageDialog('Podaj adres URL artyku'#322'u.',
+      TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil);
+    Exit;
+  end;
+  if Assigned(FOnOpenBrowser) then
+    FOnOpenBrowser(Edit1.Text.Trim);
 end;
 
 procedure TFrame2.Init(const ARepo: ISettingsRepository);

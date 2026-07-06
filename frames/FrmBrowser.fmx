@@ -1,0 +1,37 @@
+object Frame3: TFrame3
+  Size.Width = 392.000000000000000000
+  Size.Height = 408.000000000000000000
+  Size.PlatformDefault = False
+  object ToolBar1: TToolBar
+    Size.Width = 392.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object BtnClose: TSpeedButton
+      Align = Left
+      Size.Width = 90.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Zamknij'
+      OnClick = BtnCloseClick
+    end
+  end
+  object BtnConvert: TButton
+    Align = Bottom
+    Position.Y = 368.000000000000000000
+    Size.Width = 392.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Konwertuj t'#281' stron'#281
+    TextSettings.Trimming = None
+    OnClick = BtnConvertClick
+  end
+  object WebBrowser1: TWebBrowser
+    Align = Client
+    Size.Width = 392.000000000000000000
+    Size.Height = 328.000000000000000000
+    Size.PlatformDefault = False
+    WindowsEngine = EdgeIfAvailable
+  end
+end

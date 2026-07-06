@@ -5,6 +5,8 @@ inherited Form1_Windows: TForm1_Windows
       608s
       399s
       608s
+      399s
+      608s
       399s)
     inherited TabItem1: TTabItem
       Size.Width = 32.000000000000000000
@@ -25,10 +27,14 @@ inherited Form1_Windows: TForm1_Windows
           Viewport.Width = 598.000000000000000000
           Viewport.Height = 394.000000000000000000
           inherited ExpAdvanced: TExpander
-            ContentSize = '200'
+            ContentSize = '410'
           end
         end
       end
+    end
+    inherited TabItem3: TTabItem
+      ExplicitSize.cx = 0.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
     end
   end
 end

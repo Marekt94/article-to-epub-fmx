@@ -3,27 +3,33 @@
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.SysUtils, System.Types, System.UITypes, System.Variants,
   System.IOUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.DialogService, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Objects, System.ImageList, FMX.ImgList,
   FMX.TabControl, SettingsRepository, FMX.Ani, FMX.Gestures, SettingsInterface, FrmConverter,
-  FrmSettings, ClientInterface, FMX.Platform;
+  FrmSettings, FrmBrowser, ClientInterface, FMX.Platform, Classes;
 
 type
   TForm1 = class(TForm)
     TabControl1: TTabControl;
     TabItem1: TTabItem;
     TabItem2: TTabItem;
+    TabItem3: TTabItem;
     ImageList1: TImageList;
     FfrmSettings: TFrame1;
     FfrmConverter: TFrame2;
+    FfrmBrowser: TFrame3;
     AniIndicator1: TAniIndicator;
     procedure FormCreate(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;
+      Shift: TShiftState);
   private
     { Private declarations }
     FSettingsRepo: ISettingsRepository;
+    procedure OpenBrowser(AUrl: string);
+    procedure CloseBrowser;
     {$IF DEFINED(ANDROID)}
     function AppEventHanlder(AAppEvent: TApplicationEvent; AContext: TObject): boolean;
     {$ENDIF}
@@ -65,7 +71,7 @@ var
   temp: IExecutingHandlers;
   appEventSvc: IFMXApplicationEventService;
 begin
-  for var comp in [FfrmSettings, FfrmConverter] do
+  for var comp in [TFrame(FfrmSettings), TFrame(FfrmConverter), TFrame(FfrmBrowser)] do
   begin
     if Supports(comp, IExecutingHandlers, temp) then
     begin
@@ -78,6 +84,9 @@ begin
   FSettingsRepo := TIniFileSettingsRepository.Create;
   FfrmSettings.Init(FSettingsRepo);
   FfrmConverter.Init(FSettingsRepo);
+  FfrmBrowser.Init(FSettingsRepo);
+  FfrmConverter.OnOpenBrowser := OpenBrowser;
+  FfrmBrowser.OnClose := CloseBrowser;
 
 {$IF DEFINED(ANDROID)}
   if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(AppEventSvc)) then
@@ -130,6 +139,28 @@ procedure TForm1.TabControl1Change(Sender: TObject);
 begin
   if TabControl1.ActiveTab <> TabItem2 then
     FfrmSettings.SaveToRepo
+end;
+
+procedure TForm1.OpenBrowser(AUrl: string);
+begin
+  TabControl1.ActiveTab := TabItem3;
+  FfrmBrowser.OpenUrl(AUrl);
+end;
+
+procedure TForm1.CloseBrowser;
+begin
+  TabControl1.ActiveTab := TabItem1;
+end;
+
+procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;
+  Shift: TShiftState);
+begin
+  if (Key = vkHardwareBack) and (TabControl1.ActiveTab = TabItem3) then
+  begin
+    Key := 0;
+    if not FfrmBrowser.HandleBack then
+      CloseBrowser;
+  end;
 end;
 
 end.

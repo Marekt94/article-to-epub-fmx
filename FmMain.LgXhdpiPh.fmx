@@ -9,7 +9,9 @@ inherited Form1_LgXhdpiPh: TForm1_LgXhdpiPh
       416s
       615s
       416s
-      615s)
+      615s
+      608s
+      399s)
     inherited TabItem1: TTabItem
       Size.Width = 4.000000000000000000
       ExplicitSize.cx = 320.000000000000000000
@@ -17,13 +19,17 @@ inherited Form1_LgXhdpiPh: TForm1_LgXhdpiPh
       inherited FfrmConverter: TFrame2
         Size.Width = 416.000000000000000000
         Size.Height = 615.000000000000000000
-        inherited Edit1: TEdit
+        inherited LayoutMain: TLayout
+          Position.Y = 243.000000000000000000
           Size.Width = 416.000000000000000000
+          inherited Edit1: TEdit
+            Size.Width = 416.000000000000000000
+          end
           inherited Button1: TButton
             Size.Width = 416.000000000000000000
-            inherited Button2: TButton
-              Size.Width = 416.000000000000000000
-            end
+          end
+          inherited Button2: TButton
+            Size.Width = 416.000000000000000000
           end
         end
       end
@@ -41,10 +47,14 @@ inherited Form1_LgXhdpiPh: TForm1_LgXhdpiPh
           Viewport.Width = 630.000000000000000000
           Viewport.Height = 426.000000000000000000
           inherited ExpAdvanced: TExpander
-            ContentSize = '200'
+            ContentSize = '410'
           end
         end
       end
+    end
+    inherited TabItem3: TTabItem
+      ExplicitSize.cx = 0.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
     end
   end
 end

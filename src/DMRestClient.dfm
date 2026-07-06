@@ -85,4 +85,19 @@ object DataModule1: TDataModule1
     Left = 32
     Top = 184
   end
+  object RRConvertHtml: TRESTRequest
+    Client = RESTClient1
+    Method = rmPOST
+    Params = <>
+    Resource = 'api/convert-html'
+    Response = ConvertHtmlResp
+    SynchronizedEvents = False
+    Left = 288
+    Top = 296
+  end
+  object ConvertHtmlResp: TRESTResponse
+    ContentType = 'application/json'
+    Left = 32
+    Top = 264
+  end
 end

@@ -16,6 +16,8 @@ type
     RRFetchURLWithSend: TRESTRequest;
     FetchURLWithSendResp: TRESTResponse;
     HelthResp: TRESTResponse;
+    RRConvertHtml: TRESTRequest;
+    ConvertHtmlResp: TRESTResponse;
   private
     { Private declarations }
   public
@@ -38,6 +40,7 @@ type
     destructor Destroy; override;
 
     procedure FetchURL(const AURL: string; const AReceiverEmail: string);
+    procedure ConvertHtml(const AHtml, AUrl, AReceiverEmailsCsv: string);
     procedure Health;
 
     procedure Start;
@@ -45,9 +48,11 @@ type
 
     procedure FinishFetchURL;
     procedure FinishHealth;
+    procedure FinishConvertHtml;
 
     procedure ErrorFetchUrl(AObj: TObject);
     procedure ErrorHealth(AObj: TObject);
+    procedure ErrorConvertHtml(AObj: TObject);
 
     function IsSuccess(const AResp: TRESTResponse; out AInfo: string): boolean;
 
@@ -96,6 +101,7 @@ begin
 
   FDM.RRFetchURLWithEpubInResp.OnBeforeExecute := AddCommonHeaders;
   FDM.RRFetchURLWithSend.OnBeforeExecute := AddCommonHeaders;
+  FDM.RRConvertHtml.OnBeforeExecute := AddCommonHeaders;
 end;
 
 destructor TRESTClient.Destroy;
@@ -163,6 +169,46 @@ begin
   end;
 end;
 
+procedure TRESTClient.ConvertHtml(const AHtml, AUrl, AReceiverEmailsCsv: string);
+begin
+  Start;
+  // Parametr pkFILE wymusza multipart/form-data; Value staje sie nazwa pliku czesci.
+  var LFilePart := FDM.RRConvertHtml.Params.AddItem('html',
+    TEncoding.UTF8.GetBytes(AHtml), pkFILE, [], CONTENTTYPE_TEXT_HTML);
+  LFilePart.Value := 'article.html';
+  FDM.RRConvertHtml.Params.AddItem('email', AReceiverEmailsCsv, pkGETorPOST);
+  FDM.RRConvertHtml.Params.AddItem('url', AUrl, pkGETorPOST);
+  FDM.RRConvertHtml.ExecuteAsync(FinishConvertHtml, false, true, ErrorConvertHtml);
+end;
+
+procedure TRESTClient.FinishConvertHtml;
+begin
+  TThread.Synchronize(nil, procedure
+    begin
+      var info: string;
+      if IsSuccess(FDM.ConvertHtmlResp, info) then
+      begin
+        if Assigned(FOnSuccess) then
+          FOnSuccess('Strona skonwertowana i wys'#322'ana poprawnie')
+      end
+      else if Assigned(FOnError) then
+        FOnError(Exception.Create(info))
+    end);
+end;
+
+procedure TRESTClient.ErrorConvertHtml(AObj: TObject);
+begin
+  TThread.Synchronize(nil, procedure
+    begin
+      var err := Exception(AObj);
+      if Assigned(FOnError) then
+      begin
+        var resErrorText := Error(FDM.ConvertHtmlResp, err.Message);
+        FOnError(Exception.Create(resErrorText))
+      end;
+    end);
+end;
+
 procedure TRESTClient.FinishHealth;
 begin
   TThread.Synchronize(nil, procedure
@@ -171,7 +217,7 @@ begin
       if IsSuccess(FDM.HelthResp, info) then
       begin
         if Assigned(FOnSuccess) then
-          FOnSuccess('Po³¹czono z serwerem')
+          FOnSuccess('Poï¿½ï¿½czono z serwerem')
       end
       else if Assigned(FOnError) then
         FOnError(Exception.Create(info));
@@ -186,7 +232,7 @@ begin
       if IsSuccess(FDM.FetchURLWithSendResp, info) then
       begin
         if Assigned(FOnSuccess) then
-          FOnSuccess('Artyku³ skonwertowany i wys³any poprawnie')
+          FOnSuccess('Artykuï¿½ skonwertowany i wysï¿½any poprawnie')
       end
       else if Assigned(FOnError) then
         FOnError(Exception.Create(info))

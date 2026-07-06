@@ -9,6 +9,7 @@ type
   IClient = interface(IInterface)
     ['{CBBF9AD4-600E-4E0C-8539-CF06AA7DF296}']
     procedure FetchURL(const AURL: string; const AReceiverEmail: string);
+    procedure ConvertHtml(const AHtml, AUrl, AReceiverEmailsCsv: string);
     procedure Health;
   end;
 

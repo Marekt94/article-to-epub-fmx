@@ -12,7 +12,9 @@ uses
   ClientInterface in 'src\interfaces\ClientInterface.pas',
   SettingsInterface in 'src\interfaces\SettingsInterface.pas',
   Settings in 'src\Settings.pas',
-  ClientFactory in 'src\ClientFactory.pas';
+  ClientFactory in 'src\ClientFactory.pas',
+  BrowserHtmlCapture in 'src\BrowserHtmlCapture.pas',
+  FrmBrowser in 'frames\FrmBrowser.pas' {Frame3: TFrame};
 
 {$R *.res}
 
