@@ -3,10 +3,10 @@ unit FrmConverter;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.SysUtils, System.Types, System.UITypes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Edit, FMX.Layouts, ClientInterface, Settings,
-  ClientFactory, SettingsInterface;
+  ClientFactory, SettingsInterface, Classes;
 
 type
   TFrame2 = class(TFrame, IExecutingHandlers)

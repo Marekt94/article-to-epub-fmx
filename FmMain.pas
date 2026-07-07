@@ -25,6 +25,7 @@ type
     procedure TabControl1Change(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;
       Shift: TShiftState);
+    procedure FfrmConverterButton2Click(Sender: TObject);
   private
     { Private declarations }
     FSettingsRepo: ISettingsRepository;
@@ -60,6 +61,11 @@ begin
   result := true;
 end;
 {$ENDIF}
+
+procedure TForm1.FfrmConverterButton2Click(Sender: TObject);
+begin
+  FfrmConverter.Button2Click(Sender);
+end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -143,6 +149,7 @@ end;
 
 procedure TForm1.OpenBrowser(AUrl: string);
 begin
+  TabItem3.Visible := True;
   TabControl1.ActiveTab := TabItem3;
   FfrmBrowser.OpenUrl(AUrl);
 end;
@@ -150,12 +157,13 @@ end;
 procedure TForm1.CloseBrowser;
 begin
   TabControl1.ActiveTab := TabItem1;
+  TabItem3.Visible := False;
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;
   Shift: TShiftState);
 begin
-  if (Key = vkHardwareBack) and (TabControl1.ActiveTab = TabItem3) then
+  if ((Key = vkHardwareBack) or (Key = vkEscape)) and (TabControl1.ActiveTab = TabItem3) then
   begin
     Key := 0;
     if not FfrmBrowser.HandleBack then

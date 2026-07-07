@@ -8,6 +8,21 @@ uses
 type
   THtmlCaptureCallback = reference to procedure(const AHtml, AError: string);
 
+const
+  // Komunikat, gdy brak silnika przegladarki (Windows: brak WebView2 Runtime / loadera).
+  SBrowserEngineUnavailable =
+    'Wbudowana przegl'#261'darka wymaga silnika Edge (WebView2). ' +
+    'Sprawd'#378', czy zainstalowano WebView2 Runtime i czy WebView2Loader.dll ' +
+    'znajduje si'#281' obok pliku EXE.';
+
+// Zwraca True, gdy natywny silnik przegladarki jest dostepny (Android: zawsze).
+function BrowserEngineAvailable: Boolean;
+
+// Zwraca aktualny URL strony w przegladarce (pusty string, gdy niedostepny).
+// Czytany z natywnego silnika - WebBrowser.URL (FMX) nie aktualizuje sie przy
+// nawigacji uzytkownika i zwraca poczatkowe about:blank.
+function GetCurrentUrl(const AWebBrowser: TCustomWebBrowser): string;
+
 // Pobiera HTML aktualnie wyswietlanej strony (document.documentElement.outerHTML)
 // z natywnej przegladarki. Callback jest wywolywany dokladnie raz, na watku UI;
 // przy bledzie AError <> ''.
@@ -26,6 +41,7 @@ uses
   , Androidapi.Helpers
 {$ELSEIF DEFINED(MSWINDOWS)}
   , Winapi.Windows
+  , Winapi.ActiveX
   , Winapi.WebView2
   , Winapi.EdgeUtils
 {$ENDIF};
@@ -33,6 +49,51 @@ uses
 const
   cCaptureScript = 'document.documentElement.outerHTML';
   sHtmlDecodeError = 'Nie uda'#322'o si'#281' pobra'#263' kodu HTML strony.';
+
+function BrowserEngineAvailable: Boolean;
+begin
+{$IF DEFINED(ANDROID)}
+  Result := True;
+{$ELSEIF DEFINED(MSWINDOWS)}
+  // IsEdgeAvailable robi tylko LoadLibrary + sprawdzenie OS (nie wola procedur z DLL),
+  // wiec jest bezpieczne. NIE uzywac GetCoreWebView2BrowserVersionString - EdgeUtils
+  // wiaze je pod zla nazwa eksportu (brak w WebView2Loader.dll) => nil ptr => AV.
+  Result := IsEdgeAvailable;
+{$ELSE}
+  Result := False;
+{$ENDIF}
+end;
+
+function GetCurrentUrl(const AWebBrowser: TCustomWebBrowser): string;
+{$IF DEFINED(ANDROID)}
+var
+  LWebView: JWebBrowser;
+begin
+  Result := '';
+  if Supports(AWebBrowser, JWebBrowser, LWebView) and (LWebView.getUrl <> nil) then
+    Result := JStringToString(LWebView.getUrl);
+end;
+{$ELSEIF DEFINED(MSWINDOWS)}
+var
+  LWebView: ICoreWebView2;
+  LUri: PWideChar;
+begin
+  Result := '';
+  if Supports(AWebBrowser, ICoreWebView2, LWebView) then
+  begin
+    LUri := nil;
+    if (LWebView.Get_Source(LUri) = S_OK) and (LUri <> nil) then
+    begin
+      Result := string(LUri);
+      CoTaskMemFree(LUri);
+    end;
+  end;
+end;
+{$ELSE}
+begin
+  Result := '';
+end;
+{$ENDIF}
 
 // Wynik skryptu przychodzi zakodowany jako JSON-owy literal stringa.
 function DecodeJsonString(const AJson: string; out AValue: string): Boolean;
@@ -114,8 +175,7 @@ begin
   // Dziala tylko z silnikiem Edge (WindowsEngine = EdgeIfAvailable + WebView2Loader.dll).
   if not Supports(AWebBrowser, ICoreWebView2, LWebView) then
   begin
-    ACallback('', 'Przechwycenie strony wymaga silnika Edge (WebView2). ' +
-      'Sprawd'#378', czy WebView2Loader.dll znajduje si'#281' obok pliku EXE.');
+    ACallback('', SBrowserEngineUnavailable);
     Exit;
   end;
   LWebView.ExecuteScript(PWideChar(cCaptureScript),

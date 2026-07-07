@@ -3,18 +3,15 @@ unit FrmBrowser;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.SysUtils, System.Types, System.UITypes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.WebBrowser, ClientInterface, Settings,
-  ClientFactory, SettingsInterface;
+  ClientFactory, SettingsInterface, Classes;
 
 type
   TFrame3 = class(TFrame, IExecutingHandlers)
-    ToolBar1: TToolBar;
-    BtnClose: TSpeedButton;
     BtnConvert: TButton;
     WebBrowser1: TWebBrowser;
-    procedure BtnCloseClick(Sender: TObject);
     procedure BtnConvertClick(Sender: TObject);
   private
     FClient: IClient;
@@ -23,6 +20,7 @@ type
     FOnError: TProc<TObject>;
     FSettingsRepo: ISettingsRepository;
     FOnClose: TProc;
+    FInitialUrl: string;
   public
     procedure Init(const ARepo: ISettingsRepository);
     procedure OpenUrl(const AUrl: string);
@@ -48,9 +46,19 @@ end;
 
 procedure TFrame3.OpenUrl(const AUrl: string);
 begin
+  if not BrowserEngineAvailable then
+  begin
+    // Wracamy do konwertera i pokazujemy blad jeszcze przed wczytaniem strony.
+    if Assigned(FOnClose) then
+      FOnClose;
+    if Assigned(FOnError) then
+      FOnError(Exception.Create(SBrowserEngineUnavailable));
+    Exit;
+  end;
   var LUrl := AUrl.Trim;
   if not (LUrl.StartsWith('http://', True) or LUrl.StartsWith('https://', True)) then
     LUrl := 'https://' + LUrl;
+  FInitialUrl := LUrl;
   WebBrowser1.Navigate(LUrl);
 end;
 
@@ -61,15 +69,11 @@ begin
     WebBrowser1.GoBack;
 end;
 
-procedure TFrame3.BtnCloseClick(Sender: TObject);
-begin
-  if Assigned(FOnClose) then
-    FOnClose;
-end;
-
 procedure TFrame3.BtnConvertClick(Sender: TObject);
 begin
-  var LUrl := WebBrowser1.URL;
+  var LUrl := GetCurrentUrl(WebBrowser1);
+  if (LUrl = '') or LUrl.StartsWith('about:', True) then
+    LUrl := FInitialUrl;
   CaptureHtml(WebBrowser1,
     procedure(const AHtml, AError: string)
     begin

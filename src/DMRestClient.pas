@@ -1,11 +1,11 @@
-unit DMRestClient;
+﻿unit DMRestClient;
 
 interface
 
 uses
-  System.SysUtils, System.Classes, REST.Types, REST.Client,
+  System.SysUtils, REST.Types, REST.Client,
   Data.Bind.Components, Data.Bind.ObjectScope, ClientInterface, Settings, FMX.Forms,
-  REST.Json, REST.Json.Types;
+  REST.Json, REST.Json.Types, Classes;
 
 type
   TDataModule1 = class(TDataModule)
