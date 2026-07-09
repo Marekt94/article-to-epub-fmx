@@ -13,6 +13,7 @@ object Frame2: TFrame2
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Top
       TabOrder = 0
+      KeyboardType = URL
       TextSettings.HorzAlign = Center
       Size.Width = 392.000000000000000000
       Size.Height = 44.000000000000000000

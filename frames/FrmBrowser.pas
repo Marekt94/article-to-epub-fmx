@@ -24,7 +24,6 @@ type
   public
     procedure Init(const ARepo: ISettingsRepository);
     procedure OpenUrl(const AUrl: string);
-    function HandleBack: Boolean;
     procedure SetOnStart(const AProc: TProc);
     procedure SetOnSuccess(const AProc: TProc<string>);
     procedure SetOnError(const AError: TProc<TObject>);
@@ -60,13 +59,6 @@ begin
     LUrl := 'https://' + LUrl;
   FInitialUrl := LUrl;
   WebBrowser1.Navigate(LUrl);
-end;
-
-function TFrame3.HandleBack: Boolean;
-begin
-  Result := WebBrowser1.CanGoBack;
-  if Result then
-    WebBrowser1.GoBack;
 end;
 
 procedure TFrame3.BtnConvertClick(Sender: TObject);

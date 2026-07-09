@@ -54,10 +54,11 @@ object Frame1: TFrame1
     end
     object ExpAdvanced: TExpander
       Align = Top
+      IsExpanded = False
       Position.Y = 122.000000000000000000
       ShowCheck = False
       Size.Width = 604.000000000000000000
-      Size.Height = 435.000000000000000000
+      Size.Height = 25.000000000000000000
       Size.PlatformDefault = False
       Text = 'Zaawansowane'
       TabOrder = 1

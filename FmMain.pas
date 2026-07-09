@@ -150,6 +150,9 @@ end;
 procedure TForm1.OpenBrowser(AUrl: string);
 begin
   TabItem3.Visible := True;
+  // Ukrywamy caly pasek zakladek na czas przegladania, zeby nie pokazywala sie
+  // dodatkowa zakladka na dole. Przywracamy go w CloseBrowser.
+  TabControl1.TabPosition := TTabPosition.None;
   TabControl1.ActiveTab := TabItem3;
   FfrmBrowser.OpenUrl(AUrl);
 end;
@@ -157,6 +160,7 @@ end;
 procedure TForm1.CloseBrowser;
 begin
   TabControl1.ActiveTab := TabItem1;
+  TabControl1.TabPosition := TTabPosition.Bottom;
   TabItem3.Visible := False;
 end;
 
@@ -166,8 +170,9 @@ begin
   if ((Key = vkHardwareBack) or (Key = vkEscape)) and (TabControl1.ActiveTab = TabItem3) then
   begin
     Key := 0;
-    if not FfrmBrowser.HandleBack then
-      CloseBrowser;
+    // Wstecz (gest / przycisk) zawsze wraca do glownego menu,
+    // nie cofa historii przegladarki.
+    CloseBrowser;
   end;
 end;
 
