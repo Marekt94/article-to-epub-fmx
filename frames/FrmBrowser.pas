@@ -1,4 +1,4 @@
-unit FrmBrowser;
+﻿unit FrmBrowser;
 
 interface
 

@@ -1,4 +1,4 @@
-inherited Form1_Windows: TForm1_Windows
+﻿inherited Form1_Windows: TForm1_Windows
   DesignerMasterStyle = 3
   inherited TabControl1: TTabControl
     Sizes = (

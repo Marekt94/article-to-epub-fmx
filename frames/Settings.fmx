@@ -1,4 +1,4 @@
-object Frame1: TFrame1
+﻿object Frame1: TFrame1
   Align = Client
   Size.Width = 604.000000000000000000
   Size.Height = 600.000000000000000000

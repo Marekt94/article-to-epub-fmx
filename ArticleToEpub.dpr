@@ -1,4 +1,4 @@
-program ArticleToEpub;
+﻿program ArticleToEpub;
 
 uses
   System.StartUpCopy,

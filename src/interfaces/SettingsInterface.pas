@@ -1,4 +1,4 @@
-unit SettingsInterface;
+﻿unit SettingsInterface;
 
 interface
 

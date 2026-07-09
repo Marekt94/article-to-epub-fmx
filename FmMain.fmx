@@ -52,43 +52,19 @@ object Form1: TForm1
         Size.Height = 399.000000000000000000
         Size.PlatformDefault = False
         inherited LayoutMain: TLayout
-          Align = VertCenter
           Position.Y = 135.000000000000000000
           Size.Width = 608.000000000000000000
-          Size.Height = 128.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 0
           inherited Edit1: TEdit
-            Touch.InteractiveGestures = [LongTap, DoubleTap]
-            Align = Top
-            TabOrder = 0
-            TextSettings.HorzAlign = Center
             Size.Width = 608.000000000000000000
             Size.Height = 32.000000000000000000
-            Size.PlatformDefault = False
-            TextPrompt = 'Adres URL artyku'#322'u'
           end
           inherited Button1: TButton
-            Align = Top
-            Margins.Top = 8.000000000000000000
             Position.Y = 40.000000000000000000
             Size.Width = 608.000000000000000000
-            Size.Height = 32.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 1
-            Text = 'Konwertuj i wy'#347'lij do urz'#261'dzenia'
-            TextSettings.Trimming = None
           end
           inherited Button2: TButton
-            Align = Top
-            Margins.Top = 8.000000000000000000
             Position.Y = 80.000000000000000000
             Size.Width = 608.000000000000000000
-            Size.Height = 32.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 2
-            Text = 'Otw'#243'rz w przegl'#261'darce'
-            TextSettings.Trimming = None
             OnClick = FfrmConverterButton2Click
           end
         end
@@ -136,7 +112,7 @@ object Form1: TForm1
           end
           inherited ExpAdvanced: TExpander
             Size.Width = 598.000000000000000000
-            ContentSize = '410'
+            ContentSize = '200'
             inherited CardAdvanced: TLayout
               Size.Width = 598.000000000000000000
               inherited LblBackend: TLabel

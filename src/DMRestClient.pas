@@ -217,7 +217,7 @@ begin
       if IsSuccess(FDM.HelthResp, info) then
       begin
         if Assigned(FOnSuccess) then
-          FOnSuccess('Po��czono z serwerem')
+          FOnSuccess('Po'#322#261'czono z serwerem')
       end
       else if Assigned(FOnError) then
         FOnError(Exception.Create(info));
@@ -232,7 +232,7 @@ begin
       if IsSuccess(FDM.FetchURLWithSendResp, info) then
       begin
         if Assigned(FOnSuccess) then
-          FOnSuccess('Artyku� skonwertowany i wys�any poprawnie')
+          FOnSuccess('Artyku'#322' skonwertowany i wys'#322'any poprawnie')
       end
       else if Assigned(FOnError) then
         FOnError(Exception.Create(info))

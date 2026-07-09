@@ -47,7 +47,7 @@ inherited Form1_LgXhdpiPh: TForm1_LgXhdpiPh
           Viewport.Width = 630.000000000000000000
           Viewport.Height = 426.000000000000000000
           inherited ExpAdvanced: TExpander
-            ContentSize = '410'
+            ContentSize = '200'
           end
         end
       end

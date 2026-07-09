@@ -1,4 +1,4 @@
-unit BrowserHtmlCapture;
+﻿unit BrowserHtmlCapture;
 
 interface
 

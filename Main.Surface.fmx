@@ -1,4 +1,4 @@
-inherited Form1_Surface: TForm1_Surface
+﻿inherited Form1_Surface: TForm1_Surface
   ClientHeight = 1920
   ClientWidth = 1080
   DesignerMasterStyle = 3

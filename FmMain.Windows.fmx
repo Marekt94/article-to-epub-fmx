@@ -27,7 +27,7 @@ inherited Form1_Windows: TForm1_Windows
           Viewport.Width = 598.000000000000000000
           Viewport.Height = 394.000000000000000000
           inherited ExpAdvanced: TExpander
-            ContentSize = '410'
+            ContentSize = '200'
           end
         end
       end

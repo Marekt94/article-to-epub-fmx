@@ -1,4 +1,4 @@
-unit ClientInterface;
+﻿unit ClientInterface;
 
 interface
 
