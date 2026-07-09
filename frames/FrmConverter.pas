@@ -22,7 +22,9 @@ type
     FOnFinish: TProc<string>;
     FOnError: TProc<TObject>;
     FSettingsRepo: ISettingsRepository;
+    {$IF DEFINED(ANDROID)}
     FIntentDetails: string;
+    {$ENDIF}
     FOnOpenBrowser: TProc<string>;
   public
     procedure Init(const ARepo: ISettingsRepository);

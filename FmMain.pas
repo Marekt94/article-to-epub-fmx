@@ -75,7 +75,6 @@ end;
 procedure TForm1.Init;
 var
   temp: IExecutingHandlers;
-  appEventSvc: IFMXApplicationEventService;
 begin
   for var comp in [TFrame(FfrmSettings), TFrame(FfrmConverter), TFrame(FfrmBrowser)] do
   begin
@@ -95,7 +94,8 @@ begin
   FfrmBrowser.OnClose := CloseBrowser;
 
 {$IF DEFINED(ANDROID)}
-  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(AppEventSvc)) then
+  var appEventSvc: IFMXApplicationEventService;
+  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(appEventSvc)) then
     appEventSvc.SetApplicationEventHandler(AppEventHanlder);
 {$ENDIF}
 end;
