@@ -47,8 +47,7 @@
             android:exported="true"
             android:label="%activityLabel%"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
-            android:launchMode="singleTop"
-			android:noHistory="true">
+            android:launchMode="singleTop">
             <!-- Tell NativeActivity the name of our .so -->
             <meta-data android:name="android.app.lib_name" android:value="%libNameValue%" />
 

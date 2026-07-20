@@ -31,6 +31,7 @@ type
     FSettingsRepo: ISettingsRepository;
     procedure OpenBrowser(AUrl: string);
     procedure CloseBrowser;
+    procedure ShowConverterTab;
     {$IF DEFINED(ANDROID)}
     function AppEventHanlder(AAppEvent: TApplicationEvent; AContext: TObject): boolean;
     {$ENDIF}
@@ -91,6 +92,7 @@ begin
   FfrmConverter.Init(FSettingsRepo);
   FfrmBrowser.Init(FSettingsRepo);
   FfrmConverter.OnOpenBrowser := OpenBrowser;
+  FfrmConverter.OnShareReceived := ShowConverterTab;
   FfrmBrowser.OnClose := CloseBrowser;
 
 {$IF DEFINED(ANDROID)}
@@ -162,6 +164,16 @@ begin
   TabControl1.ActiveTab := TabItem1;
   TabControl1.TabPosition := TTabPosition.Bottom;
   TabItem3.Visible := False;
+end;
+
+procedure TForm1.ShowConverterTab;
+begin
+  // Nowy URL z Udostepnij: jesli byla otwarta przegladarka, zamykamy ja i wracamy
+  // do konwertera; w przeciwnym razie po prostu przechodzimy na zakladke konwertera.
+  if TabItem3.Visible then
+    CloseBrowser
+  else
+    TabControl1.ActiveTab := TabItem1;
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;
