@@ -29,6 +29,12 @@ function GetCurrentUrl(const AWebBrowser: TCustomWebBrowser): string;
 procedure CaptureHtml(const AWebBrowser: TCustomWebBrowser;
   const ACallback: THtmlCaptureCallback);
 
+// Ustawia User-Agent natywnego silnika na "czyste" Chrome (bez markera ";wv"),
+// aby logowanie Google (OAuth) nie bylo blokowane w osadzonej przegladarce.
+// Wywolywac przed Navigate. Dziala best-effort - jesli natywny silnik nie jest
+// jeszcze gotowy, nic nie robi (zostaje domyslny User-Agent).
+procedure ConfigureUserAgent(const AWebBrowser: TCustomWebBrowser);
+
 implementation
 
 uses
@@ -49,6 +55,14 @@ uses
 const
   cCaptureScript = 'document.documentElement.outerHTML';
   sHtmlDecodeError = 'Nie uda'#322'o si'#281' pobra'#263' kodu HTML strony.';
+  // "Czysty" User-Agent Chrome (bez markera ";wv"), aby Google nie blokowal OAuth
+  // w osadzonym WebView (blad disallowed_useragent). Aktualizowac wersje Chrome co jakis czas.
+  cAndroidUserAgent =
+    'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 ' +
+    '(KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36';
+  cWindowsUserAgent =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+    '(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
 
 function BrowserEngineAvailable: Boolean;
 begin
@@ -63,6 +77,37 @@ begin
   Result := False;
 {$ENDIF}
 end;
+
+procedure ConfigureUserAgent(const AWebBrowser: TCustomWebBrowser);
+{$IF DEFINED(ANDROID)}
+var
+  LWebView: JWebBrowser;
+begin
+  // Ten sam cast co w GetCurrentUrl/CaptureHtml: FMX przekazuje IID do natywnego WebView.
+  if Supports(AWebBrowser, JWebBrowser, LWebView) and (LWebView.getSettings <> nil) then
+  begin
+    LWebView.getSettings.setUserAgentString(StringToJString(cAndroidUserAgent));
+    // Wiele logowan (w tym Google) wymaga localStorage do dzialania.
+    LWebView.getSettings.setDomStorageEnabled(True);
+  end;
+end;
+{$ELSEIF DEFINED(MSWINDOWS)}
+var
+  LWebView: ICoreWebView2;
+  LSettings: ICoreWebView2Settings;
+  LSettings2: ICoreWebView2Settings2;
+begin
+  // Domyslny User-Agent WebView2 to juz Edge/Chromium (Google zwykle go akceptuje),
+  // wiec to zabezpieczenie na przyszlosc. put_UserAgent jest na ICoreWebView2Settings2.
+  if Supports(AWebBrowser, ICoreWebView2, LWebView)
+    and (LWebView.Get_Settings(LSettings) = S_OK)
+    and Supports(LSettings, ICoreWebView2Settings2, LSettings2) then
+    LSettings2.Set_UserAgent(PWideChar(cWindowsUserAgent));
+end;
+{$ELSE}
+begin
+end;
+{$ENDIF}
 
 function GetCurrentUrl(const AWebBrowser: TCustomWebBrowser): string;
 {$IF DEFINED(ANDROID)}

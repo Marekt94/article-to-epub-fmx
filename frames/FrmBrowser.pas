@@ -58,6 +58,9 @@ begin
   if not (LUrl.StartsWith('http://', True) or LUrl.StartsWith('https://', True)) then
     LUrl := 'https://' + LUrl;
   FInitialUrl := LUrl;
+  // Ustaw "czysty" User-Agent przed nawigacja, aby logowanie Google (OAuth) nie bylo
+  // blokowane w osadzonej przegladarce (blad disallowed_useragent).
+  ConfigureUserAgent(WebBrowser1);
   WebBrowser1.Navigate(LUrl);
 end;
 
