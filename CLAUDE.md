@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Working directives (do not skip)
+
+- **No global save.** Never write to the global `~/.claude` folder for this project — this includes auto-memory (`~/.claude/projects/.../memory/`), global skills, and global settings. Persist everything **inside this repo** instead: project knowledge/guidelines in `CLAUDE.md` or `docs/`, skills in `.claude/skills/`, config in `.claude/settings.json`. This is a standing rule, not per-session.
+
 ## What this is
 
 A Delphi **FireMonkey (FMX)** mobile-first app (RAD Studio / Delphi 12.1 CE, `ProjectVersion` 20.3). The user submits an article URL; a backend simplifies it, converts it to EPUB, and emails it to an e-reader. The app is the thin client: it collects a URL + settings and calls a REST backend. Primary target is **Android64**; also builds for Win64/Win32. On Android it accepts a shared URL via a `SEND` intent.
@@ -38,6 +42,12 @@ UI is deliberately separated from logic; all external communication is hidden be
   Auth on every request: `Authorization: API-Key <key>`. Keep `postman/` in sync when the backend contract changes. Full contract table: `docs/BACKEND_API.md`.
 
 Typical flow: frame button → `TClientFactory.CreateInstance(repo.Load)` → wire `IExecutingHandlers` callbacks → `IClient` async call → `Synchronize`d success/error callback → `TForm1` shows indicator/dialog.
+
+## Coding guidelines
+
+- **Self-documenting code over comments.** Maximally avoid comments; express intent through the code itself. Identifiers (variables, methods, types) may be longer but must be tied to *what they do* — e.g. `SaveSettingsToRepository` over `Save2`, `receiverEmailsCsv` over `s`. This is the clean-code principle the project follows.
+- **Comment only when code cannot express it** — a non-obvious *why*, a workaround, or an external contract. No restating/decorative comments; don't add comments to existing code gratuitously.
+- Keep existing Polish comments and user-facing Polish strings intact (see Language, below).
 
 ## Conventions & gotchas
 
