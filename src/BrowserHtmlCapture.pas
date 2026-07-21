@@ -35,6 +35,13 @@ procedure CaptureHtml(const AWebBrowser: TCustomWebBrowser;
 // jeszcze gotowy, nic nie robi (zostaje domyslny User-Agent).
 procedure ConfigureUserAgent(const AWebBrowser: TCustomWebBrowser);
 
+// Usuwa dane logowania wbudowanej przegladarki: pliki cookie oraz dane stron (localStorage,
+// IndexedDB itp.). Android uzywa globalnych menedzerow (CookieManager, WebStorage), wiec nie
+// wymaga instancji WebView - moze byc wolane z dowolnego miejsca (np. z ramki Ustawien).
+// Efektywnie wylogowuje ze wszystkich stron otwieranych w aplikacji (m.in. Google/onet).
+// Zwraca True przy powodzeniu; przy bledzie False i AError zawiera opis. Windows: brak wsparcia.
+function ClearBrowserData(out AError: string): Boolean;
+
 implementation
 
 uses
@@ -106,6 +113,33 @@ begin
 end;
 {$ELSE}
 begin
+end;
+{$ENDIF}
+
+function ClearBrowserData(out AError: string): Boolean;
+{$IF DEFINED(ANDROID)}
+begin
+  AError := '';
+  try
+    // removeAllCookies akceptuje null jako callback (nie potrzebujemy powiadomienia).
+    // flush wymusza natychmiastowy zapis pustego magazynu cookies na dysk.
+    TJCookieManager.JavaClass.getInstance.removeAllCookies(nil);
+    TJCookieManager.JavaClass.getInstance.flush;
+    // Dane stron (localStorage/IndexedDB) - logowanie Google z nich korzysta.
+    TJWebStorage.JavaClass.getInstance.deleteAllData;
+    Result := True;
+  except
+    on E: Exception do
+    begin
+      AError := E.Message;
+      Result := False;
+    end;
+  end;
+end;
+{$ELSE}
+begin
+  AError := 'Czyszczenie danych przegl'#261'darki jest dost'#281'pne tylko na Androidzie.';
+  Result := False;
 end;
 {$ENDIF}
 

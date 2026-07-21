@@ -5,8 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Controls.Presentation, FMX.Edit, FMX.Layouts, FMX.Objects, SettingsInterface,
-  Settings, ClientInterface, ClientFactory, Classes;
+  FMX.Controls.Presentation, FMX.Edit, FMX.Layouts, FMX.Objects, FMX.DialogService,
+  SettingsInterface, Settings, ClientInterface, ClientFactory, Classes;
 
 type
   TFrame1 = class(TFrame, IExecutingHandlers)
@@ -26,7 +26,9 @@ type
   LblSenderPassword: TLabel;
   EdtSenderPassword: TEdit;
     Button1: TButton;
+    BtnClearBrowserData: TButton;
   procedure Button1Click(Sender: TObject);
+  procedure BtnClearBrowserDataClick(Sender: TObject);
   private
     FClient: IClient;
     FOnStart: TProc;
@@ -48,9 +50,25 @@ type
 
 implementation
 
+uses
+  BrowserHtmlCapture;
+
 {$R *.fmx}
 
 { TAppSettings }
+
+procedure TFrame1.BtnClearBrowserDataClick(Sender: TObject);
+var
+  LError: string;
+begin
+  if ClearBrowserData(LError) then
+    TDialogService.MessageDialog('Wyczyszczono dane przegl'#261'darki.',
+      TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil)
+  else
+    TDialogService.MessageDialog(
+      'Nie uda'#322'o si'#281' wyczy'#347'ci'#263' danych przegl'#261'darki.' + sLineBreak + LError,
+      TMsgDlgType.mtError, [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil);
+end;
 
 procedure TFrame1.Button1Click(Sender: TObject);
 begin

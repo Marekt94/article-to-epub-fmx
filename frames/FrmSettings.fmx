@@ -1,4 +1,4 @@
-﻿object Frame1: TFrame1
+object Frame1: TFrame1
   Align = Client
   Size.Width = 604.000000000000000000
   Size.Height = 568.000000000000000000
@@ -62,12 +62,12 @@
       Size.PlatformDefault = False
       Text = 'Zaawansowane'
       TabOrder = 1
-      ContentSize = '410'
+      ContentSize = '200'
       object CardAdvanced: TLayout
         Align = Client
         Padding.Top = 8.000000000000000000
         Size.Width = 604.000000000000000000
-        Size.Height = 410.000000000000000000
+        Size.Height = 462.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object LblBackend: TLabel
@@ -173,6 +173,18 @@
           Text = 'Testuj po'#322#261'czenie z serwerem'
           TextSettings.Trimming = None
           OnClick = Button1Click
+        end
+        object BtnClearBrowserData: TButton
+          Align = Top
+          Margins.Top = 12.000000000000000000
+          Position.Y = 418.000000000000000000
+          Size.Width = 604.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 9
+          Text = 'Wyczy'#347#263' dane przegl'#261'darki'
+          TextSettings.Trimming = None
+          OnClick = BtnClearBrowserDataClick
         end
       end
     end
