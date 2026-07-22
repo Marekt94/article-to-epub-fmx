@@ -89,6 +89,11 @@ procedure TFrame1.Init(const ARepo: ISettingsRepository);
 begin
   FRepo := ARepo;
   LoadFromRepo;
+{$IF DEFINED(ANDROID)}
+  BtnClearBrowserData.Visible := True;
+{$ELSE}
+  BtnClearBrowserData.Visible := False;
+{$ENDIF}
 end;
 
 procedure TFrame1.LoadFromRepo;
